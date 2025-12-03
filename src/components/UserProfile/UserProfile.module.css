@@ -1,0 +1,24 @@
+.userProfile{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: yellow;
+    bottom: 10px;
+    left: 10px;
+    width: 70%;
+}
+
+.avatar{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.username{
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+}

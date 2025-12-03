@@ -1,8 +1,9 @@
 .chatSidebar{
     position: relative;
     background-color: blue;
-    width: 250px;
+    width: 200px;
     height: 100%;
+    padding-inline: 30px;
 }
 
 .toggleSidebar{

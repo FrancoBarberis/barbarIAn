@@ -1,6 +1,6 @@
 import styles from "./UserProfile.module.css";
 
-export default function UserProfile() {
+const UserProfile : React.FC = () => {
   return (
     <div className={styles.userProfile}>
       <img src="/path/to/avatar.jpg" alt="User Avatar" className={styles.avatar} />
@@ -8,3 +8,5 @@ export default function UserProfile() {
     </div>
   );
 }
+
+export default UserProfile;
