@@ -1,9 +1,17 @@
+import React from "react";
 import styles from "./Home.module.css";
+import ChatWindow from "../../components/ChatWindow/ChatWindow";
+import ChatSidebar from "../../components/ChatSidebar/ChatSidebar";
+import InputBox from "../../components/InputBox/InputBox";
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <div className={styles.container}>
-      <h1>BarbarIAn Chat</h1>
+      <ChatSidebar />
+      <div className={styles.chatArea}>
+        <ChatWindow />
+        <InputBox />
+      </div>
     </div>
   );
 };
