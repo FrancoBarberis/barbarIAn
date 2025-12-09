@@ -1,13 +1,14 @@
 .chatSidebar {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     position: relative;
-    background-color: rgb(122, 15, 15);
+    background-color: rgb(159, 36, 36);
     width: 250px;
     height: 100%;
     transition: all .5s;
     padding-left: 10px;
+    border-right: 10px;
+    border-color: black;
 }
 
 .collapsed {
@@ -35,18 +36,20 @@
 .messageList {
     margin: 0;
     padding: 0;
-    margin-top: 20%;
-    height: 73vh;
-    width: 70%;
+    margin-top: 10vh;
+    gap: 2px;
+    height:75vh;
+    width: 85%;
     background-color: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
     padding-left: 10px;
     list-style: none;
     overflow-y: auto;
-    padding-right: 50px;
+    padding-right: 20px;
+    overflow-x: hidden;
+    transition: all ease-in-out .3s;
 }
 
 .messageList::-webkit-scrollbar {
@@ -59,31 +62,30 @@
 }
 
 .messageList::-webkit-scrollbar-thumb {
-    background-color: #888;
+    background-color: #c73838;
     border-radius: 5px;
 }
 
 .messageList::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
+    background-color: red;
 }
 
 
 .message {
+    margin:0;
     cursor: pointer;
-    padding-block: 14px;
+    padding-block: 20px;
+    padding-inline: 10px;
     background-color: transparent;
     color: white;
-    transition: all 1s;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
     line-height: 100%;
     width: 100%;
-    min-width: 0;
-    display: block; /* o flex si necesitás íconos */
 }
 
 
 .message:hover{
-    background-color: gray;
+    background-color: #c73838;
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import clsx from "clsx";
 
 const ChatSidebar: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false); //TODO: PASAR A ESTADO GLOBAL PARA MANEJAR ANCHO DE USER PROFILE
   return (
     <div
       className={clsx(styles.chatSidebar, { [styles.collapsed]: collapsed })}

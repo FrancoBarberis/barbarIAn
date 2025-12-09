@@ -1,5 +1,5 @@
 .chatWindow{
-    background-color: red;
+    background-color: rgb(122, 15, 15);
     min-width: 200px;
     display: flex;
     height: 100%;
