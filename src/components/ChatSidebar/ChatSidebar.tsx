@@ -6,7 +6,7 @@ import clsx from "clsx";
 const ChatSidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false); //TODO: PASAR A ESTADO GLOBAL PARA MANEJAR ANCHO DE USER PROFILE
   return (
-    <div
+    <aside
       className={clsx(styles.chatSidebar, { [styles.collapsed]: collapsed })}
     >
       <button
@@ -46,7 +46,7 @@ const ChatSidebar: React.FC = () => {
         
       </div>
       <UserProfile />
-    </div>
+    </aside>
   );
 };
 
