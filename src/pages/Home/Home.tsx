@@ -7,7 +7,7 @@ import { useState } from "react";
 import type { Message as MessageType } from "../../types/messageType";
 
 const Home: React.FC = () => {
-  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]); //DEBE SER GLOBAL
   const onSendMessage = (message: MessageType) => {
     console.log(message);
     setMessages((prevMessages) => [

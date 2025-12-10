@@ -10,36 +10,11 @@ interface ChatWindowProps {
 export default function ChatWindow({ messagesList }: ChatWindowProps) {
   const [messages, setMessages] = useState<MessageType[]>(messagesList);
 
-  return (
+  return(
     <div className={styles.chatWindow}>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
-      <Message text="asistente" role="assistant"/>
-      <Message text="usuario" role="user"/>
+      {messages.map((msg, index) => (
+        <Message key={index} text={msg.text} role={msg.role}/>
+      ))}
     </div>
-  );
+  )
 }

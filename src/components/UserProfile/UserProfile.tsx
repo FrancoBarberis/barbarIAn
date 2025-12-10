@@ -1,6 +1,6 @@
 import styles from "./UserProfile.module.css";
 import clsx from "clsx";
-import HelmetIMG from "../../../public/Helmet.png"
+import HelmetIMG from "../../assets/Helmet.png"
 
 const UserProfile : React.FC = () => {
   return (
