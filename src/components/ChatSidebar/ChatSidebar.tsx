@@ -14,13 +14,14 @@ const ChatSidebar: React.FC = () => {
   const selectChat = useChatStore((s) => s.selectChat);
   const createChat = useChatStore((s) => s.createChat);
   const deleteChat = useChatStore((s) => s.deleteChat);
+  const editChat = useChatStore((s) => s.editChat);
 
   return (
     <aside
       className={clsx(styles.chatSidebar, collapsed && styles.collapsed)}
       onMouseEnter={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
-    >
+    > 
       <button
         className={clsx(styles.newChat, collapsed && styles.hidden)}
         onClick={() => createChat("Nuevo chat")}
@@ -56,7 +57,7 @@ const ChatSidebar: React.FC = () => {
                   className={clsx(styles.chatControl)}
                   onClick={(e) => {
                     e.stopPropagation();
-                    console.log("E");
+                    editChat(chat.id, prompt("Nuevo título:", chat.title) || chat.title);
                   }}
                 >
                   E

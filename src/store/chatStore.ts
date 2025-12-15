@@ -10,6 +10,7 @@ type ChatState = {
   sendMessage: (text: string, role?: Role) => void;
   getSelectedChat: () => Chat | null;
   deleteChat: (chatId: string) => void; // <-- nuevo método
+  editChat: (chatId: string, newTitle: string) => void; // <-- nuevo método
 };
 
 // INICIALIZO LOS CHATS EN VACÍO
@@ -65,4 +66,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
       };
     });
   },
+  editChat: (chatId, newTitle) => {
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId ? { ...c, title: newTitle } : c
+      ),
+    }));
+  }
 }));
