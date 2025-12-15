@@ -21,8 +21,9 @@
     top:-30px;
     transform: translateX(-50%);
     font-size: 4em;
+    color: white;
 }
 
 span{
-    color: rgb(237, 112, 112);
+    color: #803707;
 }

@@ -8,6 +8,7 @@ const InputBox: React.FC = () => {
   const selectedChatId = useChatStore((s) => s.selectedChatId);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const waitingForResponse = false; // Placeholder for future use
 
   // Cuando cambia el chat seleccionado, enfocar el input
   useEffect(() => {

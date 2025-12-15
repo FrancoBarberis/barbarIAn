@@ -1,3 +1,4 @@
+
 import { create } from "zustand";
 import type { Chat, Message, Role } from "../types/messageType";
 
@@ -8,12 +9,11 @@ type ChatState = {
   createChat: (title: string) => string;
   sendMessage: (text: string, role?: Role) => void;
   getSelectedChat: () => Chat | null;
+  deleteChat: (chatId: string) => void; // <-- nuevo método
 };
 
-
-//INICIALIZO LOS CHATS EN VACIO
-const initialChats: Chat[] = [
-];
+// INICIALIZO LOS CHATS EN VACÍO
+const initialChats: Chat[] = [];
 
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: initialChats,
@@ -51,5 +51,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
   getSelectedChat: () => {
     const { chats, selectedChatId } = get();
     return chats.find((c) => c.id === selectedChatId) ?? null;
+  },
+
+  deleteChat: (chatId) => {
+    set((state) => {
+      const updatedChats = state.chats.filter((c) => c.id !== chatId);
+      return {
+        chats: updatedChats,
+        selectedChatId:
+          state.selectedChatId === chatId
+            ? updatedChats[0]?.id ?? null
+            : state.selectedChatId,
+      };
+    });
   },
 }));

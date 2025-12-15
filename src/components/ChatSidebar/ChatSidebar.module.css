@@ -7,7 +7,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x:center;
-    width: 280px;
+    width: 240px;
     height: 100%;
     transition: all .7s;
     border-right: var(--border-width) solid var(--border-color);
@@ -43,7 +43,7 @@
 }
 
 .active{
-    background-color: green;
+    background-color: #a75a28;
 }
 
 .toggleSidebar {
@@ -76,7 +76,7 @@
     align-items: center;
     list-style: none;
     overflow-y: auto;
-    padding-right: 20px;
+    padding-right: 15px;
     overflow-x: hidden;
     transition: all ease-in-out 1s;
     padding-left: 15px;
@@ -92,7 +92,7 @@
 }
 
 .chatList::-webkit-scrollbar-thumb {
-    background-color: #969647;
+    background-color: #803707;
 }
 
 /* 
@@ -130,5 +130,5 @@ TODO: Fix ellipsis */
 
 .chat.active:hover{
     filter: brightness(1.3);
-    background-color: green;
+    background-color: #bb662e;
 }
