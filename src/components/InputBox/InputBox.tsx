@@ -15,9 +15,7 @@ const InputBox: React.FC = () => {
   }, [selectedChatId]);
 
   const submit = () => {
-    const trimmed = message.trim();
-    if (!trimmed || !selectedChatId) return;
-    sendMessage(trimmed, "user");
+    sendMessage(message, "user");
     setMessage("");
   };
 

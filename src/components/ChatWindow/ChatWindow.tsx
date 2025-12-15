@@ -26,6 +26,7 @@ export default function ChatWindow({ messagesList }: ChatWindowProps) {
           key={msg.id ?? `${msg.role}-${msg.timestamp ?? Math.random()}`}
           text={msg.text}
           role={msg.role}
+          timestamp={msg.timestamp}
         />
       ))}
 

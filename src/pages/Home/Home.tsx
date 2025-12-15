@@ -11,18 +11,12 @@ const Home: React.FC = () => {
   // Selectores del store (Zustand)
   const chats = useChatStore((s) => s.chats);
   const selectedChatId = useChatStore((s) => s.selectedChatId);
-  const sendMessage = useChatStore((s) => s.sendMessage);
 
   // Derivar la lista de mensajes del chat seleccionado (como antes)
   const messagesList =
     chats.find((c) => c.id === selectedChatId)?.messages ?? [];
 
-  // Función que ya tenías, pero ahora usa la acción global
-  const onSendMessage = (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    sendMessage(trimmed, "user");
-  };
+  
 
   return (
     <div className={styles.container}>

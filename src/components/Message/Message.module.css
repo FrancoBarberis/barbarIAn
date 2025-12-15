@@ -1,15 +1,35 @@
 .message{
-    padding: 10px 20px;
+    padding: 5px 10px;
     max-width: 35%;
     border-radius: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .assistant{
     background-color: blue;
     align-self: flex-end;
+    text-align: right;
 }
 
 .user{
     background-color: green;
     align-self: flex-start;
+    text-align: left;
+}
+
+.timestamp{
+    font-size: 0.8em;
+    color: white;
+    margin-top: 5px;
+}
+
+.message_text{
+    color: white;
+    margin: 0;
+    font-weight: 300;
+    white-space: normal;         /* Asegura que el texto se envuelva */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
