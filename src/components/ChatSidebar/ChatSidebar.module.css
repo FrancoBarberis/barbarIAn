@@ -9,7 +9,8 @@
     background-position-x:center;
     width: 240px;
     height: 100%;
-    transition: all .7s;
+    transition: all .3s;
+    z-index: 2;
     border-right: var(--border-width) solid var(--border-color);
 }
 
@@ -123,7 +124,6 @@ TODO: Fix ellipsis */
     pointer-events: all;
 }
 
-/* CREAR OVERLAY QUE PONGA UN COLOR DE CONTRASTE */
 .chat:hover{ 
     background-color:#599ba8;
 }

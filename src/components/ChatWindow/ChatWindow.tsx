@@ -22,7 +22,13 @@ export default function ChatWindow({ messagesList }: ChatWindowProps) {
   return (
     <div className={styles.chatWindow}>
       {(messagesList.length === 0) && (
-        <p className={styles.message}>No hay mensajes aún. Empezá la conversación!</p>
+        //SI NO HAY MENSAJES RENDERIZO LAS SUGERENCIAS
+        <div className={styles.suggestions}>
+          <button className={styles.suggestion__button}>1</button>
+          <button className={styles.suggestion__button}>2</button>
+          <button className={styles.suggestion__button}>3</button>
+          <button className={styles.suggestion__button}>4</button>
+        </div>
       )}
       {messagesList.map((msg) => (
         <Message

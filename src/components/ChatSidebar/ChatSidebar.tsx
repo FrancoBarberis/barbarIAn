@@ -54,7 +54,7 @@ const ChatSidebar: React.FC = () => {
               {/* Importante: evitar que los botones internos disparen el onClick del contenedor */}
               <div>
                 <button
-                  className={clsx(styles.chatControl)}
+                  className={clsx(styles.chatControl, collapsed && styles)}
                   onClick={(e) => {
                     e.stopPropagation();
                     editChat(chat.id, prompt("Nuevo título:", chat.title) || chat.title);

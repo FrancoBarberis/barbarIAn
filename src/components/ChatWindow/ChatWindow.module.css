@@ -25,3 +25,13 @@
 .chatWindow::-webkit-scrollbar-thumb {
     background-color: #803707;
 }
+
+.suggestions{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: repeat(2,auto);
+    gap: 4px;
+    width: 60%;
+    align-self: center;
+    justify-self: center;
+}

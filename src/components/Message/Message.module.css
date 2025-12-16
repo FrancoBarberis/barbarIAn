@@ -5,6 +5,8 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
+    font-family:  'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Helvetica, sans-serif;
+    font-weight: bold;
 }
 
 .assistant{
@@ -21,8 +23,10 @@
 
 .timestamp{
     margin: 0;
+    padding: 0;
     font-size: 0.7em;
     color: rgb(180, 176, 176);
+    margin-top: 3px;
 }
 
 .message_text{

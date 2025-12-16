@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./InputBox.module.css";
 import { useChatStore } from "../../store/chatStore";
+import SendIcon from "../../assets/send.png";
 
 const InputBox: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -47,7 +48,7 @@ const InputBox: React.FC = () => {
         type="submit"
         disabled={!message.trim()}
       >
-        Send
+        <img src={SendIcon} alt="send icon" loading="eager" className={styles.imgSendIcon} />
       </button>
     </form>
   );
