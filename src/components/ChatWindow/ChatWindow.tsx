@@ -21,6 +21,9 @@ export default function ChatWindow({ messagesList }: ChatWindowProps) {
 
   return (
     <div className={styles.chatWindow}>
+      {(messagesList.length === 0) && (
+        <p className={styles.message}>No hay mensajes aún. Empezá la conversación!</p>
+      )}
       {messagesList.map((msg) => (
         <Message
           key={msg.id ?? `${msg.role}-${msg.timestamp ?? Math.random()}`}

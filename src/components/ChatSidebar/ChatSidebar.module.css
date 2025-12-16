@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
+    position: fixed;
     background-color: #3C6F79;
     background-repeat: no-repeat;
     background-size: cover;
