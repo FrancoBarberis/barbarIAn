@@ -13,9 +13,9 @@ const AgentPreview: React.FC = () => {
       <h2 className={styles.title}>Barbar<span>IA</span>n</h2>
       <img
         src={(thinking ? AgentThinkingIMG : AgentIdleIMG) as string}
-        alt="Agent preview image"
+        alt={thinking ? "Agente pensando" : "Agente inactivo"}
         className={styles.image}
-        loading="lazy"
+        loading="eager"
         decoding="async"
       />
     </div>

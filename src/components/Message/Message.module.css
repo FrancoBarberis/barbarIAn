@@ -1,7 +1,7 @@
 .message{
-    padding: 5px 10px;
+    padding: 2px 10px;
     max-width: 35%;
-    border-radius: 10px;
+    border-radius: 2px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
@@ -20,15 +20,18 @@
 }
 
 .timestamp{
-    font-size: 0.8em;
-    color: white;
+    margin: 0;
+    font-size: 0.7em;
+    color: rgb(180, 176, 176);
 }
 
 .message_text{
     color: white;
     margin: 0;
+    font-size: 1.2em;
     font-weight: 300;
     white-space: normal;         /* Asegura que el texto se envuelva */
     word-wrap: break-word;
     overflow-wrap: break-word;
+    text-transform: capitalize;
 }

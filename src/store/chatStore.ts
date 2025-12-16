@@ -2,7 +2,6 @@
 import { create } from "zustand";
 import type { Chat, Message, Role } from "../types/messageType";
 import { useUIStore } from "./uiStore";
-import { use } from "react";
 
 type ChatState = {
   chats: Chat[];
@@ -22,7 +21,8 @@ const setThinking = useUIStore.getState().setThinking;
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: initialChats,
   selectedChatId: initialChats[0]?.id ?? null,
-  
+
+
 
   selectChat: (chatId) => set({ selectedChatId: chatId }),
 
@@ -50,14 +50,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
       text: trimmed,
       timestamp: Date.now(),
     };
-
+    setThinking(true);
     set((state) => ({
       chats: state.chats.map((c) =>
         c.id === chatId ? { ...c, messages: [...c.messages, newMsg] } : c
       ),
     }));
 
-    
+    //SIMULO ESPERA DE RESPUESTA DEL AGENTE
+
+    setTimeout(() => {
+    //YA NO ESTÁ PENSANDO
+      setThinking(false);
+    }, 2000);
+
   },
 
   getSelectedChat: () => {
