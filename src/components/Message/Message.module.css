@@ -13,12 +13,14 @@
     background-color: blue;
     align-self: flex-end;
     text-align: right;
+    margin-right: 2%;
 }
 
 .user{
     background-color: green;
     align-self: flex-start;
     text-align: left;
+    margin-left: 2%;
 }
 
 .timestamp{
