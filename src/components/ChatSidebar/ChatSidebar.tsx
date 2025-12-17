@@ -4,6 +4,8 @@ import UserProfile from "../UserProfile/UserProfile";
 import { useChatStore } from "../../store/chatStore";
 import { useUIStore } from "../../store/uiStore";
 import clsx from "clsx";
+import deleteIcon from "../../assets/trash-bin.png";
+import editIcon from "../../assets/pencil.png";
 
 const ChatSidebar: React.FC = () => {
   const collapsed = useUIStore((s) => s.collapsed);
@@ -67,9 +69,9 @@ const ChatSidebar: React.FC = () => {
                         const newTitle = prompt("Nuevo título:", chat.title) || chat.title;
                         editChat(chat.id, newTitle);
                       }}
-                      aria-label="Editar título"
+                      aria-label="Editar chat"
                     >
-                      E
+                      <img src={editIcon} alt="pencil" className={styles.button__icon} />
                     </button>
                   </div>
                   <div>
@@ -81,7 +83,7 @@ const ChatSidebar: React.FC = () => {
                       }}
                       aria-label="Eliminar chat"
                     >
-                      D
+                      <img src={deleteIcon} alt="trash-bin" className={styles.button__icon} />
                     </button>
                   </div>
                 </div>
