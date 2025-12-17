@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     position: fixed;
-    background-color: #3C6F79;
+    background:linear-gradient(to bottom, #3C6F79, #803707);
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x:center;
@@ -16,11 +16,11 @@
 
 
 .newChat{
-    background-color: rgb(162, 42, 42);
+    background-color: #803707;
     color: white;
     cursor: pointer;
-    width: fit-content;
-    height: fit-content;
+    width: 30px;
+    height: 30px;
     align-self: center;
     margin-top: 30px;
 }
@@ -36,6 +36,7 @@
     justify-content: center;
     align-items: center;
     width: 100px;
+    font-size: 30px;
 }
 
 .hidden{
@@ -43,9 +44,6 @@
     transition: all .3s;
 }
 
-.active{
-    background-color: #a75a28;
-}
 
 .toggleSidebar {
     font-size: 20px;
@@ -79,8 +77,9 @@
     overflow-y: auto;
     padding-right: 15px;
     overflow-x: hidden;
-    transition: all ease-in-out 1s;
+    transition: all ease-in-out 1.5s;
     padding-left: 15px;
+    font-size: 15px;
 }
 
 .chatList::-webkit-scrollbar {
@@ -93,7 +92,7 @@
 }
 
 .chatList::-webkit-scrollbar-thumb {
-    background-color: #803707;
+    background-color: #a7490b;
 }
 
 /* 
@@ -111,6 +110,7 @@ TODO: Fix ellipsis */
   padding-block: 10px;
   padding-left: 10px;
   transition: all ease-in-out .3s;
+  pointer-events: all;
 }
 
 
@@ -121,11 +121,20 @@ TODO: Fix ellipsis */
 .chatControl{
     background-color: transparent;
     cursor:pointer;
-    pointer-events: all;
+    opacity: 0;
+    transition: all .3s;
+}
+
+.chat:hover .chatControl{
+    opacity: 1;
 }
 
 .chat:hover{ 
     background-color:#599ba8;
+}
+
+.active{
+    background-color: #a75a28;
 }
 
 .chat.active:hover{

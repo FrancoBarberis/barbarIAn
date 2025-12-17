@@ -29,9 +29,8 @@
     border: none;
     background-color: #3C6F79;
     color: white;
-    font-size: 16px;
     cursor: pointer;
-    right: 8%;
+    right: 7.5%;
     transition: all .2s;
 }
 

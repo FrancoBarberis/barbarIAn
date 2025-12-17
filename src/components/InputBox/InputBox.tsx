@@ -27,6 +27,7 @@ const InputBox: React.FC = () => {
   };
 
   return (
+    //TODO: Revisar que el texto no se ponga detras del boton cuando es un parrafo muy largo
     <form
       className={clsx(styles.inputBox, noMessages && styles.no__messages)}
       onSubmit={(e) => {

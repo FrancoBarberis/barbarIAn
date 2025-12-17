@@ -21,70 +21,83 @@ const ChatSidebar: React.FC = () => {
       className={clsx(styles.chatSidebar, collapsed && styles.collapsed)}
       onMouseEnter={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
-    > 
-      <button
-        className={clsx(styles.newChat, collapsed && styles.hidden)}
-        onClick={() => createChat("Nuevo chat")}
-      >
-        +
-      </button>
+    >
+      {collapsed ? (
+        // Vista colapsada
+        <div className={styles.collapsedContent}>
+          {">"}
+        </div>
+      ) : (
+        // Vista expandida
+        <>
+          <button
+            className={styles.newChat}
+            onClick={() => createChat("Nuevo chat")}
+          >
+            +
+          </button>
 
-      <div
-        className={clsx(
-          styles.chatList,
-          collapsed && styles.hidden,
-          chats.length === 0 && styles.centered
-        )}
-      >
-        {chats.map((chat) => {
-          const isActive = chat.id === selectedChatId;
-          return (
-            <div
-              key={chat.id}
-              role="button"
-              tabIndex={0}
-              className={clsx(styles.chat, isActive && styles.active)}
-              onClick={() => selectChat(chat.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") selectChat(chat.id);
-              }}
-            >
-              <div className={styles.messageTitle}>{chat.title}</div>
-
-              {/* Importante: evitar que los botones internos disparen el onClick del contenedor */}
-              <div>
-                <button
-                  className={clsx(styles.chatControl, collapsed && styles)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    editChat(chat.id, prompt("Nuevo título:", chat.title) || chat.title);
+          <div
+            className={clsx(
+              styles.chatList,
+              chats.length === 0 && styles.centered
+            )}
+          >
+            {chats.map((chat) => {
+              const isActive = chat.id === selectedChatId;
+              return (
+                <div
+                  key={chat.id}
+                  role="button"
+                  tabIndex={0}
+                  className={clsx(styles.chat, isActive && styles.active)}
+                  onClick={() => selectChat(chat.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") selectChat(chat.id);
                   }}
                 >
-                  E
-                </button>
-              </div>
-              <div>
-                <button
-                  className={clsx(styles.chatControl)}
-                  onClick={(e) => {
-                    e.stopPropagation(); // evita seleccionar el chat o afectar hover
-                    deleteChat(chat.id);
-                  }}
-                >
-                  D
-                </button>
-              </div>
-            </div>
-          );
-        })}
+                  <div className={styles.messageTitle}>{chat.title}</div>
 
-        {chats.length === 0 && (
-          <p className={styles.message}>
-            No hay chats. Creá uno para empezar.
-          </p>
-        )}
-      </div>
-      <UserProfile />
+                  {/* Importante: evitar que los botones internos disparen el onClick del contenedor */}
+                  <div>
+                    <button
+                      className={styles.chatControl}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const newTitle = prompt("Nuevo título:", chat.title) || chat.title;
+                        editChat(chat.id, newTitle);
+                      }}
+                      aria-label="Editar título"
+                    >
+                      E
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      className={styles.chatControl}
+                      onClick={(e) => {
+                        e.stopPropagation(); // evita seleccionar el chat o afectar hover
+                        deleteChat(chat.id);
+                      }}
+                      aria-label="Eliminar chat"
+                    >
+                      D
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {chats.length === 0 && (
+              <p className={styles.message}>
+                No hay chats. Creá uno para empezar.
+              </p>
+            )}
+          </div>
+
+          <UserProfile />
+        </>
+      )}
     </aside>
   );
 };
