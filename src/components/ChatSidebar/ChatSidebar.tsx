@@ -61,7 +61,7 @@ const ChatSidebar: React.FC = () => {
                   <div className={styles.messageTitle}>{chat.title}</div>
 
                   {/* Importante: evitar que los botones internos disparen el onClick del contenedor */}
-                  <div>
+                  <div className={styles.controlsWrapper}>
                     <button
                       className={styles.chatControl}
                       onClick={(e) => {

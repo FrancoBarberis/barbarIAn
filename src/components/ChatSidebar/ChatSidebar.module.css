@@ -1,19 +1,18 @@
+/* TODO: cuando envío un mensaje sin chat asociado, se crea un nuevo chat, si el mensaje es demasiado largo causa overflow sobre el chat de chatList, y los controles se salen (debo limitar los caracteres que se muestran o superponer los botones al titulo de chat) */
+
+
 .chatSidebar {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: fixed;
     background:linear-gradient(to bottom, #3C6F79, #803707);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position-x:center;
     width: 240px;
     height: 100%;
     transition: all .3s;
     z-index: 2;
     border-right: var(--border-width) solid var(--border-color);
 }
-
 
 .newChat{
     background-color: #a7490b;
@@ -120,6 +119,12 @@ TODO: Fix ellipsis */
     justify-self: start;
 }
 
+.controlsWrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+}
+
 .chatControl{
     display: flex;
     align-items: center;
@@ -147,6 +152,12 @@ TODO: Fix ellipsis */
 
 .active{
     background-color: #a75a28;
+}
+
+.active::before{
+    background-color: black;
+    width: 3px;
+    height: auto;
 }
 
 .chat.active:hover{
