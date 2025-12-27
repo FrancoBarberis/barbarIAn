@@ -1,7 +1,7 @@
-
 import { create } from "zustand";
 import type { Chat, Message, Role } from "../types/messageType";
 import { useUIStore } from "./uiStore";
+import { data } from "framer-motion/client";
 
 type ChatState = {
   chats: Chat[];
@@ -49,51 +49,103 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     return id;
   },
 
-  sendMessage: (text, role = "user") => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
+ sendMessage: (text, role = "user") => {
+  const trimmed = text.trim();
+  if (!trimmed) return;
 
-    let chatId = get().selectedChatId;
-    if (!chatId) {
-      chatId =
-        get().createChat(
-          trimmed.length > 20 ? trimmed.slice(0, 20) + "..." : trimmed
-        );
-    }
+  let chatId = get().selectedChatId;
+  if (!chatId) {
+    chatId = get().createChat(
+      trimmed.length > 20 ? trimmed.slice(0, 20) + "..." : trimmed
+    );
+  }
 
-    const newMsg: Message = {
-      id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
-      chatId,
-      role,
-      text: trimmed,
-      timestamp: Date.now(),
+  const newMsg: Message = {
+    id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+    chatId,
+    role,
+    text: trimmed,
+    timestamp: Date.now(),
+  };
+
+  set((state) => {
+    // Actualizar el chat con el mensaje del usuario
+    const chats = state.chats.map((c) =>
+      c.id === chatId ? { ...c, messages: [...c.messages, newMsg] } : c
+    );
+
+    const isSelected = state.selectedChatId === chatId;
+    const messagesList = isSelected
+      ? [...state.messagesList, newMsg]
+      : state.messagesList;
+
+    return {
+      chats,
+      messagesList,
+      noMessages: messagesList.length === 0,
     };
+  });
 
-    setThinking(true);
+  // Función asíncrona para manejar la respuesta de la API
+  const handleResponse = async () => {
+    try {
+      setThinking(true);
+      //fetch al backend
+      const response = await fetch(`${import.meta.env.REACT_APP_SERVER_URL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(get().getSelectedChat()?.messages ?? []),
+      });
 
-    set((state) => {
-      // Actualizar el chat con el mensaje
-      const chats = state.chats.map((c) =>
-        c.id === chatId ? { ...c, messages: [...c.messages, newMsg] } : c
-      );
+      if (!response.ok) {
+        throw new Error("Error en la respuesta del servidor");
+      }
 
-      // Si el mensaje es para el chat seleccionado, reflejarlo en la lista visible
-      const isSelected = state.selectedChatId === chatId;
-      const messagesList = isSelected
-        ? [...state.messagesList, newMsg]
-        : state.messagesList;
+      const data = await response.json();
 
-      return {
-        chats,
-        messagesList,
-        noMessages: messagesList.length === 0,
+      // Agregar la respuesta de la API como un nuevo mensaje del asistente
+      const responseMsg: Message = {
+        id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+        chatId,
+        role: "assistant",
+        text: data.response, // Asumiendo que la respuesta de la API tiene un campo `response`
+        timestamp: Date.now(),
       };
-    });
 
-    setTimeout(() => {
+      // Actualizar el estado con la respuesta del asistente
+      set((state) => {
+        const chats = state.chats.map((c) =>
+          c.id === chatId ? { ...c, messages: [...c.messages, responseMsg] } : c
+        );
+
+        const isSelected = state.selectedChatId === chatId;
+        const messagesList = isSelected
+          ? [...state.messagesList, responseMsg]
+          : state.messagesList;
+
+        return {
+          chats,
+          messagesList,
+          noMessages: messagesList.length === 0,
+        };
+      });
+    } catch (error) {
+      console.error("Error sending message to server:", error);
+    } finally {
       setThinking(false);
-    }, 2000);
-  },
+    }
+  };
+
+  // Llamar a la función asíncrona para manejar la respuesta
+  handleResponse();
+
+  // Opcional: tiempo de espera para terminar la animación de `thinking`
+  setTimeout(() => {
+    setThinking(false);
+  }, 2000);
+},
 
   getSelectedChat: () => {
     const { chats, selectedChatId } = get();
@@ -109,10 +161,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
           ? updatedChats[0]?.id ?? null
           : state.selectedChatId;
 
-      const newMessages =
-        newSelectedId
-          ? updatedChats.find((c) => c.id === newSelectedId)?.messages ?? []
-          : [];
+      const newMessages = newSelectedId
+        ? updatedChats.find((c) => c.id === newSelectedId)?.messages ?? []
+        : [];
 
       return {
         chats: updatedChats,
@@ -129,4 +180,3 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       ),
     })),
 }));
-``

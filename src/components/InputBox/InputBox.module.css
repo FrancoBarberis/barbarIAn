@@ -1,4 +1,4 @@
-.inputBox{
+.inputBox {
     position: relative;
     background-color: #803707;
     width: 100%;
@@ -12,7 +12,7 @@
     border-top: var(--border-width) solid var(--border-color);
 }
 
-.inputField{
+.inputField {
     width: 90%;
     height: 30px;
     border-radius: 30px;
@@ -21,7 +21,7 @@
     background-color: white;
 }
 
-.sendButton{
+.sendButton {
     position: absolute;
     width: 25px;
     height: 25px;
@@ -34,17 +34,17 @@
     transition: all .2s;
 }
 
-.sendButton:hover{
+.sendButton:hover {
     filter: contrast(1.5);
     scale: 1.05;
 }
 
-.imgSendIcon{
+.imgSendIcon {
     width: 20px;
     height: 20px;
 }
 
-.no__messages{
+.no__messages {
     position: absolute;
     width: 40%;
     display: flex;
@@ -60,6 +60,6 @@
     transition: all .2s;
 }
 
-.suggestion__button:hover{
+.suggestion__button:hover {
     scale: 1.1;
 }

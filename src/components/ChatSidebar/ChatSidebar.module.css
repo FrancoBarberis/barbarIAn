@@ -113,7 +113,7 @@ TODO: Fix ellipsis */
     /* incluye padding en el alto */
     cursor: pointer;
     padding-block: 10px;
-    padding-left: 10px;
+    padding-inline: 10px;
     transition: all ease-in-out .3s;
     pointer-events: all;
 }
@@ -172,4 +172,9 @@ TODO: Fix ellipsis */
 .chat.active:hover {
     filter: brightness(1.3);
     background-color: #bb662e;
+}
+
+.message {
+    transition: all ease-in-out 1s;
+    opacity: 1;
 }

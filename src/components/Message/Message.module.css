@@ -1,40 +1,42 @@
-.message{
+.message {
+    display: flex;
+    flex-direction: column;
     padding: 2px 10px;
     max-width: 25vw;
     border-radius: 2px;
-    border: var(--border-width) solid var(--border-color) ;
-    border-style:ridge;
+    border: var(--border-width) solid var(--border-color);
+    border-style: ridge;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
-    font-family:  'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Helvetica, sans-serif;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Helvetica, sans-serif;
     font-weight: bold;
-    font-size: smaller;
+    font-size: large;
 }
 
-.assistant{
+.assistant {
     background-color: blue;
     align-self: flex-end;
     text-align: right;
     margin-right: 2%;
 }
 
-.user{
+.user {
     background-color: green;
     align-self: flex-start;
     text-align: left;
     margin-left: 2%;
 }
 
-.timestamp{
+.timestamp {
     margin: 0;
     padding: 0;
     font-size: 0.7em;
-    color: rgb(180, 176, 176);
+    color: white;
     margin-top: 3px;
 }
 
-.message_text{
+.message_text {
     color: white;
     margin: 0;
     font-size: 1.2em;

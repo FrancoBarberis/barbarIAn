@@ -95,7 +95,7 @@ const ChatSidebar: React.FC = () => {
             })}
 
             {chats.length === 0 && (
-              <p className={styles.message}>
+              <p className={clsx([styles.message], collapsed && styles.hidden)}>
                 No hay chats. Creá uno para empezar.
               </p>
             )}
