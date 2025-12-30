@@ -23,6 +23,7 @@ const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        padding: "10px 20px",
         minWidth: "20%",
         backgroundColor: role === "assistant" ? "gray" : "green",
         color: "black",

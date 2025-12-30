@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./InputBox.module.css";
 import { useChatStore } from "../../store/chatStore";
+import { useUIStore } from "../../store/uiStore";
 import SendIcon from "../../assets/send.png";
+import StopIcon from "../../assets/stop-icon.png";
 import clsx from "clsx";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import Box from "@mui/joy/Box";
 
 const InputBox: React.FC = () => {
+  const thinking = useUIStore((s) => s.thinking);
   const noMessages = useChatStore((s) => s.noMessages);
   const [message, setMessage] = useState("");
   const selectedChatId = useChatStore((s) => s.selectedChatId);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const waitingForResponse = false; // Placeholder for future use
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -79,7 +81,7 @@ const InputBox: React.FC = () => {
           }}
         >
           <img
-            src={SendIcon}
+            src={thinking ? StopIcon : SendIcon}
             alt="send icon"
             loading="eager"
             className={styles.imgSendIcon}

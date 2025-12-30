@@ -52,10 +52,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
 
   sendMessage: async (text, role = "user") => {
     const trimmed = text.trim();
-    if (!trimmed){
-      console.log("[sendMessage] texto vacío, abortando.");
-      return;
-    } 
+    if (!trimmed) return;
 
     let chatId = get().selectedChatId;
     if (!chatId) {
@@ -72,23 +69,19 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       timestamp: Date.now(),
     };
 
-    // 1️⃣ agregar mensaje del usuario
-    set((state) => {
-      const chats = state.chats.map((c) =>
+    // 1️⃣ mensaje del usuario
+    set((state) => ({
+      chats: state.chats.map((c) =>
         c.id === chatId ? { ...c, messages: [...c.messages, userMsg] } : c
-      );
+      ),
+      messagesList:
+        state.selectedChatId === chatId
+          ? [...state.messagesList, userMsg]
+          : state.messagesList,
+      noMessages: false,
+    }));
 
-      return {
-        chats,
-        messagesList:
-          state.selectedChatId === chatId
-            ? [...state.messagesList, userMsg]
-            : state.messagesList,
-        noMessages: false,
-      };
-    });
-
-    // 2️⃣ agregar mensaje temporal del assistant
+    // 2️⃣ mensaje temporal del assistant
     const tempAssistantMsg: Message = {
       id: "assistant-thinking",
       chatId,
@@ -97,29 +90,30 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       timestamp: Date.now(),
     };
 
-    set((state) => {
-      const chats = state.chats.map((c) =>
-        c.id === chatId ? { ...c, messages: [...c.messages, tempAssistantMsg] } : c
-      );
-      return {
-        chats,
-        messagesList:
-          state.selectedChatId === chatId
-            ? [...state.messagesList, tempAssistantMsg]
-            : state.messagesList,
-      };
-    });
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId
+          ? { ...c, messages: [...c.messages, tempAssistantMsg] }
+          : c
+      ),
+      messagesList:
+        state.selectedChatId === chatId
+          ? [...state.messagesList, tempAssistantMsg]
+          : state.messagesList,
+    }));
 
     setThinking(true);
 
     try {
       const chat = get().chats.find((c) => c.id === chatId);
-      if (!chat) return;
+      if (!chat) throw new Error("Chat no encontrado");
+
       const response = await fetch("http://localhost:3000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(chat.messages),
       });
+
       if (!response.ok) {
         throw new Error("Respuesta no OK del servidor");
       }
@@ -134,37 +128,21 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         timestamp: Date.now(),
       };
 
-      // 3️⃣ reemplazar el mensaje temporal por la respuesta real
-      set((state) => {
-        const chats = state.chats.map((c) => {
-          if (c.id !== chatId) return c;
-          // Reemplaza el último mensaje assistant si es el temporal
-          const msgs = [...c.messages];
-          if (msgs.length && msgs[msgs.length - 1].id === "assistant-thinking") {
-            msgs[msgs.length - 1] = assistantMsg;
-          } else {
-            msgs.push(assistantMsg);
-          }
-          return { ...c, messages: msgs };
-        });
-        return {
-          chats,
-          messagesList:
-            state.selectedChatId === chatId
-              ? (() => {
-                  const msgs = [...state.messagesList];
-                  if (msgs.length && msgs[msgs.length - 1].id === "assistant-thinking") {
-                    msgs[msgs.length - 1] = assistantMsg;
-                  } else {
-                    msgs.push(assistantMsg);
-                  }
-                  return msgs;
-                })()
-              : state.messagesList,
-        };
-      });
+      // 3️⃣ reemplazar mensaje temporal (éxito)
+      set((state) => replaceTempMessage(state, chatId, assistantMsg));
     } catch (error) {
       console.error("Error enviando mensaje:", error);
+
+      const errorMsg: Message = {
+        id: crypto.randomUUID(),
+        chatId,
+        role: "assistant",
+        text: "Error al obtener respuesta",
+        timestamp: Date.now(),
+      };
+
+      // 3️⃣ reemplazar mensaje temporal (error)
+      set((state) => replaceTempMessage(state, chatId, errorMsg));
     } finally {
       setThinking(false);
     }
@@ -199,3 +177,35 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       ),
     })),
 }));
+
+// 🔧 helper para no duplicar lógica
+function replaceTempMessage(
+  state: ChatState,
+  chatId: string,
+  newMsg: Message
+) {
+  return {
+    chats: state.chats.map((c) => {
+      if (c.id !== chatId) return c;
+      const msgs = [...c.messages];
+      if (msgs.length && msgs[msgs.length - 1].id === "assistant-thinking") {
+        msgs[msgs.length - 1] = newMsg;
+      } else {
+        msgs.push(newMsg);
+      }
+      return { ...c, messages: msgs };
+    }),
+    messagesList:
+      state.selectedChatId === chatId
+        ? (() => {
+            const msgs = [...state.messagesList];
+            if (msgs.length && msgs[msgs.length - 1].id === "assistant-thinking") {
+              msgs[msgs.length - 1] = newMsg;
+            } else {
+              msgs.push(newMsg);
+            }
+            return msgs;
+          })()
+        : state.messagesList,
+  };
+}
