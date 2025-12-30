@@ -1,20 +1,7 @@
-.message {
-    display: flex;
-    flex-direction: column;
-    padding: 2px 10px;
-    max-width: 25vw;
-    border-radius: 2px;
-    border: var(--border-width) solid var(--border-color);
-    border-style: ridge;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: large;
-}
+
 
 .assistant {
+    color: blue;
     background-color: blue;
     align-self: flex-end;
     text-align: right;
@@ -32,12 +19,12 @@
     margin: 0;
     padding: 0;
     font-size: 0.7em;
-    color: white;
+    color: black;
     margin-top: 3px;
 }
 
 .message_text {
-    color: white;
+    color: black;
     margin: 0;
     font-size: 1.2em;
     font-weight: 300;
@@ -45,4 +32,5 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     text-transform: capitalize;
+    text-align: left;
 }
