@@ -1,12 +1,16 @@
 import styles from "./Message.module.css";
 import clsx from "clsx";
 import Card from "@mui/joy/Card";
+import { motion } from "framer-motion";
+import CircularProgress from "@mui/joy/CircularProgress";
 
 interface MessageProps {
   text: string;
   role: "user" | "assistant";
   timestamp: number;
 }
+
+const MessageCard = motion(Card);
 
 const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
   const formattedTime = new Date(timestamp).toLocaleTimeString("es-AR", {
@@ -16,15 +20,22 @@ const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
   });
 
   return (
-    <Card
-      orientation="horizontal"
-      size="lg"
+    <MessageCard
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -6 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
       variant="soft"
       sx={{
         display: "flex",
         flexDirection: "column",
-        padding: "10px 20px",
-        minWidth: "20%",
+        gap: "6px",
+
+        /* 🔑 claves para que no se rompa */
+        width: "fit-content",
+        maxWidth: "50%",
+        padding: "10px 16px",
         backgroundColor: role === "assistant" ? "gray" : "green",
         color: "black",
         alignSelf: role === "assistant" ? "flex-end" : "flex-start",
@@ -33,9 +44,24 @@ const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
       }}
       className={clsx(styles.message)}
     >
-      <p className={styles.message_text}>{text}</p>
-      <span style={{alignSelf: role === "assistant" ? "flex-end" : "flex-start"}}>{formattedTime}</span>
-    </Card>
+      <p className={styles.message_text}>
+        {text === "" ? (
+          <CircularProgress size="sm" variant="soft" color="neutral" />
+        ) : (
+          text
+        )}
+      </p>
+
+      <span
+        style={{
+          alignSelf: role === "assistant" ? "flex-end" : "flex-start",
+          fontSize: "0.75em",
+          opacity: 0.7,
+        }}
+      >
+        {formattedTime}
+      </span>
+    </MessageCard>
   );
 };
 

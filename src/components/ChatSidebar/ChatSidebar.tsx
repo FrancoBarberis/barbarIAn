@@ -100,8 +100,7 @@ const ChatSidebar: React.FC = () => {
               </p>
             )}
           </div>
-
-          <UserProfile />
+          {/* <UserProfile /> */}
         </>
       )}
     </aside>

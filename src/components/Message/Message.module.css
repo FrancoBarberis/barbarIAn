@@ -1,13 +1,12 @@
-
+/*.Message.module.css*/
 
 .message_text {
-    color: black;
-    margin: 0;
-    font-size: 1.2em;
-    font-weight: 300;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-transform: capitalize;
-    text-align: left;
+  color: black;
+  margin: 0;
+  font-size: 0.9em;
+  font-weight: 400;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
 }
