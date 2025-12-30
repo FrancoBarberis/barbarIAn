@@ -4,7 +4,7 @@
     flex-direction: column;
 
     flex: 1;          /* 🔑 puede crecer */
-    min-width: 0;     /* 🔥 puede encogerse */
+    min-width: 100%;     /* 🔥 puede encogerse */
 
     padding-top: 3vh;
     background-color: #414131;
