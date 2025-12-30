@@ -8,7 +8,6 @@ import clsx from "clsx";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import Box from "@mui/joy/Box";
-import {motion} from "framer-motion";
 
 const InputBox: React.FC = () => {
   const thinking = useUIStore((s) => s.thinking);
@@ -17,7 +16,6 @@ const InputBox: React.FC = () => {
   const selectedChatId = useChatStore((s) => s.selectedChatId);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const MotionForm = motion.form;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -95,3 +93,4 @@ const InputBox: React.FC = () => {
 };
 
 export default InputBox;
+``
