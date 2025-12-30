@@ -2,12 +2,14 @@
 .chatWindow {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 100%;
-    flex-direction: column;
+
+    flex: 1;          /* 🔑 puede crecer */
+    min-width: 0;     /* 🔥 puede encogerse */
+
     padding-top: 3vh;
     background-color: #414131;
     gap: 10px;
+
     overflow-y: auto;
     height: 100%;
 }
