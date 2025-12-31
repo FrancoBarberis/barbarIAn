@@ -1,10 +1,9 @@
 .container {
     position: absolute;
     bottom: 0;
-    background-color: var(--primary-darker);
     width: 100%;
-    height: var(--input-box-height);
     min-height: 13vh;
+    background-color: var(--secondary-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,31 +11,10 @@
     border-top: var(--border-width) solid var(--border-color);
 }
 
-.inputField {
-    width: 90%;
-    height: 30px;
-    border-radius: 30px;
-    border: none;
-    padding-left: 15px;
-    background-color: white;
-}
-
-.sendButton {
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    border: none;
-    background-color: #3C6F79;
-    color: white;
-    cursor: pointer;
-    right: 7.5%;
-    transition: all .2s;
-}
-
-.sendButton:hover {
-    filter: contrast(1.5);
-    scale: 1.05;
+.inputBox {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .imgSendIcon {
@@ -48,21 +26,19 @@
     width: 40%;
     bottom: 50%;
     transform: translateY(50%);
-    display: flex;
-    border-radius: 30px;
+    border-radius: 20px;
+    background-color: var(--secondary-color);
 }
 
 .suggestions {
     position: absolute;
-    bottom: calc(var(--input-box-height) + 10px);
-    background-color: transparent);
+    bottom: calc(100% + 10px);
     padding: 10px;
     display: flex;
     gap: 10px;
     font-weight: 200;
-
 }
 
-.hidden{
+.hidden {
     display: none;
 }

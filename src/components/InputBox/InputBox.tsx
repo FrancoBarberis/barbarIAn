@@ -42,10 +42,7 @@ const InputBox: React.FC = () => {
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
-          border: "1px solid #ccc",
           width: "90%",
-          borderRadius: "24px",
-          overflow: "hidden",
         }}
       >
         <Input
@@ -67,17 +64,15 @@ const InputBox: React.FC = () => {
           autoComplete="off"
           sx={{
             flexGrow: 1,
-            borderRadius: "24px 0 0 24px",
-            padding: "0 16px",
+            borderRadius: "5px 0 0 5px",
           }}
         />
         <Button
           type="submit"
           disabled={!message.trim()}
           sx={{
-            borderRadius: "0 24px 24px 0",
+            borderRadius: "0 5px 5px 0",
             minWidth: "auto",
-            padding: "0 16px",
             backgroundColor: "#007bff",
             color: "#fff",
             border: "none",

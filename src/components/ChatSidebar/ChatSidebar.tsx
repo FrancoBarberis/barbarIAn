@@ -17,9 +17,11 @@ const ChatSidebar: React.FC = () => {
   const deleteChat = useChatStore((s) => s.deleteChat);
   const editChat = useChatStore((s) => s.editChat);
 
+  const noMessages = useChatStore((s) => s.noMessages);
+
   return (
     <aside
-      className={clsx(styles.chatSidebar, collapsed && styles.collapsed, chats.length === 0 && styles.hidden)}
+      className={clsx(styles.chatSidebar, collapsed && styles.collapsed, noMessages && styles.no__messages)}
       onMouseEnter={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
     >
