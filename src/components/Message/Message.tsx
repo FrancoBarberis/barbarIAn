@@ -24,7 +24,7 @@ const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
       initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={{ duration: 1.3, ease: "easeOut" }}
       style={{
         alignSelf: "flex-end",
         paddingRight: "10%",

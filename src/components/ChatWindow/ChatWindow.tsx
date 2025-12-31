@@ -4,6 +4,7 @@ import Message from "../Message/Message";
 import type { Message as MessageType } from "../../types/messageType";
 import { useEffect, useRef } from "react";
 import { useChatStore } from "../../store/chatStore";
+import clsx from "clsx";
 
 interface ChatWindowProps {
   messagesList: MessageType[];
@@ -25,7 +26,7 @@ export default function ChatWindow({ messagesList }: ChatWindowProps) {
   }, [messagesList.length]); // cada vez que se agrega/quita un mensaje
 
   return (
-    <div className={styles.chatWindow}>
+    <div className={clsx(styles.chatWindow, messagesList.length === 0 && styles.no__messages)}>
       <h2 className={styles.chatTitle}>{messagesList.length === 0 ? "" : chatTitle}</h2>
       {messagesList.map((msg, idx) => (
         <Message

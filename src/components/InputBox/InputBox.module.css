@@ -3,7 +3,7 @@
     bottom: 0;
     background-color: #803707;
     width: 100%;
-    height: 13vh;
+    height: var(--input-box-height);
     min-height: 13vh;
     display: flex;
     justify-content: center;

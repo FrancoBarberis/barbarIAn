@@ -12,6 +12,7 @@
 
     overflow-y: auto;
     height: 100%;
+    margin-bottom: 13vh;
 }
 
 .chatTitle {
@@ -32,4 +33,8 @@
 
 .chatWindow::-webkit-scrollbar-thumb {
     background-color: #803707;
+}
+
+.no__messages {
+    margin-bottom: 0;
 }

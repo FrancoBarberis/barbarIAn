@@ -6,6 +6,7 @@
     /* VARIABLES */
     --border-color: #332407;
     --border-width: 1px;
+    --input-box-height: 10vh;
 }
 
 @font-face {

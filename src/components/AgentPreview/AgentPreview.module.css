@@ -14,7 +14,6 @@
     height: 100%;
     transform: scaleX(-1);
     object-fit: cover;
-    user-drag: none;
     /* Propiedad específica de WebKit */
     -webkit-user-drag: none;
     /* Para compatibilidad con Safari/Chrome */
