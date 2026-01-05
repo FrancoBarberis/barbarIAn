@@ -6,12 +6,13 @@
     flex-direction: column;
     justify-content: space-between;
     position: fixed;
-    background:linear-gradient(to bottom, #3C6F79, #803707);
+    background-color: var(--primary-darker);
     width: 240px;
     height: 100%;
-    transition: all .3s;
+    transition: all .6s;
     z-index: 2;
     border-right: var(--border-width) solid var(--border-color);
+    color: white;
 }
 
 .newChat{
@@ -38,11 +39,12 @@
 }
 
 .collapsed {
-    background-color: #3C6F79;
+    background-color: var(--primary-darker);
     justify-content: center;
     align-items: center;
     width: 100px;
     font-size: 30px;
+    transition: all .6;
 }
 
 .hidden{
@@ -105,18 +107,23 @@
 TODO: Fix ellipsis */
 
 .chat {
-  display: flex;            /* para alinear título y preview */
-  flex-direction: row;   /* título arriba, preview abajo */
-  justify-content: space-around;  
-  align-items: center;
-  width: 90%;
-  height: 60px;             /* altura fija */
-  box-sizing: border-box;    /* incluye padding en el alto */
-  cursor: pointer;
-  padding-block: 10px;
-  padding-left: 10px;
-  transition: all ease-in-out .3s;
-  pointer-events: all;
+    display: flex;
+    /* para alinear título y preview */
+    flex-direction: row;
+    /* título arriba, preview abajo */
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    height: 60px;
+    /* altura fija */
+    box-sizing: border-box;
+    /* incluye padding en el alto */
+    cursor: pointer;
+    padding-block: 10px;
+    padding-inline: 10px;
+    transition: all ease-in-out .3s;
+    pointer-events: all;
+    color: black;
 }
 
 
@@ -159,13 +166,13 @@ TODO: Fix ellipsis */
     background-color: #a75a28;
 }
 
-.active::before{
-    background-color: black;
-    width: 3px;
-    height: auto;
-}
 
 .chat.active:hover{
     filter: brightness(1.3);
     background-color: #bb662e;
+}
+
+.message {
+    transition: all ease-in-out 1s;
+    opacity: 1;
 }

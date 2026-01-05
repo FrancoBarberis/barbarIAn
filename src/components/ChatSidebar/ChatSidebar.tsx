@@ -18,9 +18,11 @@ const ChatSidebar: React.FC = () => {
   const deleteChat = useChatStore((s) => s.deleteChat);
   const editChat = useChatStore((s) => s.editChat);
 
+  const noMessages = useChatStore((s) => s.noMessages);
+
   return (
     <aside
-      className={clsx(styles.chatSidebar, collapsed && styles.collapsed)}
+      className={clsx(styles.chatSidebar, collapsed && styles.collapsed, noMessages && styles.no__messages)}
       onMouseEnter={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
     >
@@ -91,13 +93,12 @@ const ChatSidebar: React.FC = () => {
             })}
 
             {chats.length === 0 && (
-              <p className={styles.message}>
+              <p className={clsx([styles.message], collapsed && styles.hidden)}>
                 No hay chats. Creá uno para empezar.
               </p>
             )}
           </div>
-
-          <UserProfile />
+          {/* <UserProfile /> */}
         </>
       )}
     </aside>

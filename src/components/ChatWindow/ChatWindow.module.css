@@ -1,15 +1,25 @@
 /* ChatWindow.module.css */
 .chatWindow {
     display: flex;
-    width: 100%;
-    max-width: 100%;
     flex-direction: column;
-    padding-inline: 5%;
+
+    flex: 1;          /* 🔑 puede crecer */
+    min-width: 100%;     /* 🔥 puede encogerse */
+
     padding-top: 3vh;
-    background-color: #414131;
+    background: var(--primary-color);
     gap: 10px;
+
     overflow-y: auto;
     height: 100%;
+    margin-bottom: 13vh;
+}
+
+.chatTitle {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 5%;
+    font-size: 2em;
 }
 
 .chatWindow::-webkit-scrollbar {
@@ -17,9 +27,14 @@
 }
 
 .chatWindow::-webkit-scrollbar-track {
-    background-color: black;
+    background-color: var(--scrollbar-track);
+
 }
 
 .chatWindow::-webkit-scrollbar-thumb {
-    background-color: #803707;
+    background-color: var(--scrollbar-thumb);
+}
+
+.no__messages {
+    margin-bottom: 0;
 }

@@ -1,4 +1,3 @@
-
 import { create } from "zustand";
 import type { Chat, Message, Role } from "../types/messageType";
 import { useUIStore } from "./uiStore";
@@ -51,7 +50,7 @@ type ChatState = {
 
   selectChat: (chatId: string) => void;
   createChat: (title: string) => string;
-  sendMessage: (text: string, role?: Role) => void;
+  sendMessage: (text: string, role?: Role) => Promise<void>;
   getSelectedChat: () => Chat | null;
   deleteChat: (chatId: string) => void;
   editChat: (chatId: string, newTitle: string) => void;
@@ -70,13 +69,13 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       saveSelectedIdToLS(chatId);
       return {
         selectedChatId: chatId,
-        messagesList: newMessages,
-        noMessages: newMessages.length === 0,
+        messagesList: messages,
+        noMessages: messages.length === 0,
       };
     }),
 
   createChat: (title) => {
-    const id = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
+    const id = crypto.randomUUID();
     const newChat: Chat = { id, title, messages: [] };
 
     set((state) => {
@@ -108,13 +107,46 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       );
     }
 
-    const newMsg: Message = {
-      id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+    const userMsg: Message = {
+      id: crypto.randomUUID(),
       chatId,
       role,
       text: trimmed,
       timestamp: Date.now(),
     };
+
+    // 1️⃣ mensaje del usuario
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId ? { ...c, messages: [...c.messages, userMsg] } : c
+      ),
+      messagesList:
+        state.selectedChatId === chatId
+          ? [...state.messagesList, userMsg]
+          : state.messagesList,
+      noMessages: false,
+    }));
+
+    // 2️⃣ mensaje temporal del assistant
+    const tempAssistantMsg: Message = {
+      id: "assistant-thinking",
+      chatId,
+      role: "assistant",
+      text: "...",
+      timestamp: Date.now(),
+    };
+
+    set((state) => ({
+      chats: state.chats.map((c) =>
+        c.id === chatId
+          ? { ...c, messages: [...c.messages, tempAssistantMsg] }
+          : c
+      ),
+      messagesList:
+        state.selectedChatId === chatId
+          ? [...state.messagesList, tempAssistantMsg]
+          : state.messagesList,
+    }));
 
     setThinking(true);
 
@@ -142,7 +174,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
 
     setTimeout(() => {
       setThinking(false);
-    }, 2000);
+    }
   },
 
   getSelectedChat: () => {
@@ -152,12 +184,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
 
   deleteChat: (chatId) =>
     set((state) => {
-      const updatedChats = state.chats.filter((c) => c.id !== chatId);
-
-      const newSelectedId =
-        state.selectedChatId === chatId
-          ? updatedChats[0]?.id ?? null
-          : state.selectedChatId;
+      const chats = state.chats.filter((c) => c.id !== chatId);
+      const selectedChatId =
+        state.selectedChatId === chatId ? chats[0]?.id ?? null : state.selectedChatId;
 
       const newMessages =
         newSelectedId
@@ -169,10 +198,10 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       saveSelectedIdToLS(newSelectedId);
 
       return {
-        chats: updatedChats,
-        selectedChatId: newSelectedId,
-        messagesList: newMessages,
-        noMessages: newMessages.length === 0,
+        chats,
+        selectedChatId,
+        messagesList: messages,
+        noMessages: messages.length === 0,
       };
     }),
 

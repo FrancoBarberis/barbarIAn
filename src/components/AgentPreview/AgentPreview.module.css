@@ -1,9 +1,13 @@
+/*AgentPreview.module.css*/
+
 .AgentPreview {
     position: relative;
     height: 100%;
     max-width: 400px;
+    flex-shrink: 0;
     border-left: var(--border-width) solid;
     border-color: var(--border-color);
+    background: var(--secondary-color);
 }
 
 .image {
@@ -11,7 +15,6 @@
     height: 100%;
     transform: scaleX(-1);
     object-fit: cover;
-    user-drag: none;
     /* Propiedad específica de WebKit */
     -webkit-user-drag: none;
     /* Para compatibilidad con Safari/Chrome */
@@ -30,10 +33,10 @@
     top: -30px;
     transform: translateX(-50%);
     font-size: 4em;
-    color: white;
+    color: var(--text-color);
     user-select: none;
 }
 
 span {
-    color: #803707;
+    color: var(--accent-color);
 }

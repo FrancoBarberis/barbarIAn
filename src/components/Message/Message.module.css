@@ -1,46 +1,18 @@
-.message{
-    padding: 2px 10px;
-    max-width: 25vw;
-    border-radius: 2px;
-    border: var(--border-width) solid var(--border-color) ;
-    border-style:ridge;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    font-family:  'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: smaller;
+/*.Message.module.css*/
+
+.message_text {
+  color: black;
+  margin: 0;
+  font-size: 0.9em;
+  font-weight: 400;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
 }
 
-.assistant{
-    background-color: blue;
-    align-self: flex-end;
-    text-align: right;
-    margin-right: 2%;
-}
-
-.user{
-    background-color: green;
-    align-self: flex-start;
-    text-align: left;
-    margin-left: 2%;
-}
-
-.timestamp{
-    margin: 0;
-    padding: 0;
-    font-size: 0.7em;
-    color: rgb(180, 176, 176);
-    margin-top: 3px;
-}
-
-.message_text{
-    color: white;
-    margin: 0;
-    font-size: 1.2em;
-    font-weight: 300;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-transform: capitalize;
+.message {
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 50%;
 }
