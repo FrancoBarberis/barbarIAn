@@ -1,19 +1,37 @@
+//TODO: si el chat que borro es el selected chat id, thinking:false
+
+
 import { create } from "zustand";
 import type { Chat, Message, Role } from "../types/messageType";
 import { useUIStore } from "./uiStore";
 
-// Helpers de Local Storage
+// =====================
+// Config / Helpers
+// =====================
 const LS_KEYS = {
   chats: "chats",
   selectedChatId: "selectedChatId",
 } as const;
+
+
+const BACKEND_URL = import.meta.env.VITE_CHAT_API_URL ?? "http://localhost:3001/chat";
+const BACKEND_STREAM_URL = import.meta.env.VITE_CHAT_STREAM_URL ?? "http://localhost:3001/chat/stream";
+
+
+// Headers "como estaban": ajustá según tu backend (auth, custom headers, etc.)
+function getBackendHeaders(): HeadersInit {
+  return {
+    "Content-Type": "application/json",
+     "Authorization": `Bearer ${import.meta.env.OPENAI_API_KEY}`,
+    // "X-Client": "barbarIAn-ui",
+  };
+}
 
 function readChatsFromLS(): Chat[] {
   try {
     const raw = localStorage.getItem(LS_KEYS.chats);
     return raw ? (JSON.parse(raw) as Chat[]) : [];
   } catch {
-    // Si el JSON está corrupto, volvemos a []
     return [];
   }
 }
@@ -31,7 +49,9 @@ function saveSelectedIdToLS(id: string | null) {
   else localStorage.removeItem(LS_KEYS.selectedChatId);
 }
 
-// Hidratar estado inicial desde LS
+// =====================
+// Estado inicial (hidratar)
+// =====================
 const initialChats: Chat[] = readChatsFromLS();
 const initialSelectedId: string | null =
   readSelectedIdFromLS() ?? initialChats[0]?.id ?? null;
@@ -42,6 +62,9 @@ const initialMessages =
 
 const setThinking = useUIStore.getState().setThinking;
 
+// =====================
+// Tipos
+// =====================
 type ChatState = {
   chats: Chat[];
   selectedChatId: string | null;
@@ -56,6 +79,9 @@ type ChatState = {
   editChat: (chatId: string, newTitle: string) => void;
 };
 
+// =====================
+// Store
+// =====================
 export const useChatStore = create<ChatState>()((set, get) => ({
   chats: initialChats,
   selectedChatId: initialSelectedId,
@@ -69,13 +95,14 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       saveSelectedIdToLS(chatId);
       return {
         selectedChatId: chatId,
-        messagesList: messages,
-        noMessages: messages.length === 0,
+        messagesList: newMessages,
+        noMessages: newMessages.length === 0,
       };
     }),
 
   createChat: (title) => {
-    const id = crypto.randomUUID();
+    const id =
+      crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
     const newChat: Chat = { id, title, messages: [] };
 
     set((state) => {
@@ -94,75 +121,142 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     return id;
   },
 
-  // Usar este método tanto para "enviar" (role: 'user') como para "recibir" (role: 'assistant')
-  sendMessage: (text, role = "user") => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
 
-    let chatId = get().selectedChatId;
-    if (!chatId) {
-      // crear chat con título corto derivado del primer mensaje
-      chatId = get().createChat(
-        trimmed.length > 20 ? trimmed.slice(0, 20) + "..." : trimmed
-      );
+// Envia y/o recibe mensajes. Si role = "user", llama al backend y streamea la respuesta.
+sendMessage: async (text, role = "user") => {
+  const trimmed = text.trim();
+  if (!trimmed) return;
+
+  // 1) Asegurar chatId
+  let chatId = get().selectedChatId;
+  if (!chatId) {
+    chatId = get().createChat(
+      trimmed.length > 20 ? trimmed.slice(0, 20) + "..." : trimmed
+    );
+  }
+
+  // 2) Mensaje entrante (usuario o asistente directo)
+  const inboundMsg: Message = {
+    id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+    chatId,
+    role,
+    text: trimmed,
+    timestamp: Date.now(),
+  };
+
+  // 3) Agregar el mensaje entrante y persistir
+  set((state) => {
+    const updatedChats = state.chats.map((c) =>
+      c.id === chatId ? { ...c, messages: [...c.messages, inboundMsg] } : c
+    );
+
+    saveChatsToLS(updatedChats);
+
+    const isSelected = state.selectedChatId === chatId;
+    const updatedMessagesList = isSelected
+      ? [...state.messagesList, inboundMsg]
+      : state.messagesList;
+
+    return {
+      chats: updatedChats,
+      messagesList: updatedMessagesList,
+      noMessages: updatedMessagesList.length === 0,
+    };
+  });
+
+  // 4) Si no es user, no llamamos al backend (inyectás mensajes del asistente manualmente)
+  if (role !== "user") return;
+
+  // 5) Insertar placeholder del asistente y persistir
+  const placeholder: Message = {
+    id: "assistant-thinking", // ID conocido para reemplazo
+    chatId,
+    role: "assistant",
+    text: "...",
+    timestamp: Date.now(),
+  };
+
+  set((state) => {
+    const updatedChats = state.chats.map((c) =>
+      c.id === chatId ? { ...c, messages: [...c.messages, placeholder] } : c
+    );
+
+    saveChatsToLS(updatedChats);
+
+    const isSelected = state.selectedChatId === chatId;
+    const updatedMessagesList = isSelected
+      ? [...state.messagesList, placeholder]
+      : state.messagesList;
+
+    return {
+      chats: updatedChats,
+      messagesList: updatedMessagesList,
+      noMessages: updatedMessagesList.length === 0,
+    };
+  });
+
+  // 6) UI "thinking"
+  setThinking(true);
+
+  try {
+    // 7) Payload para backend (historial completo del chat)
+    const { chats } = get();
+    const currentChat = chats.find((c) => c.id === chatId)!;
+
+    const payload = {
+      chatId,
+      messages: currentChat.messages.map((m) => ({
+        role: m.role,        // "user" | "assistant" | "system"
+        content: m.text,     // tu backend usa "content"
+        timestamp: m.timestamp,
+        id: m.id,
+      })),
+    };
+
+    // 8) Llamar endpoint de streaming
+    const resp = await fetch(BACKEND_STREAM_URL, {
+      method: "POST",
+      headers: getBackendHeaders(),
+      body: JSON.stringify({ messages: payload.messages }), // tu router espera { messages }
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text().catch(() => "");
+      throw new Error(`HTTP ${resp.status} ${resp.statusText} ${errText}`);
+    }
+    if (!resp.body) {
+      throw new Error("La respuesta no incluye body (stream).");
     }
 
-    const userMsg: Message = {
-      id: crypto.randomUUID(),
-      chatId,
-      role,
-      text: trimmed,
-      timestamp: Date.now(),
-    };
-
-    // 1️⃣ mensaje del usuario
-    set((state) => ({
-      chats: state.chats.map((c) =>
-        c.id === chatId ? { ...c, messages: [...c.messages, userMsg] } : c
-      ),
-      messagesList:
-        state.selectedChatId === chatId
-          ? [...state.messagesList, userMsg]
-          : state.messagesList,
-      noMessages: false,
-    }));
-
-    // 2️⃣ mensaje temporal del assistant
-    const tempAssistantMsg: Message = {
-      id: "assistant-thinking",
-      chatId,
-      role: "assistant",
-      text: "...",
-      timestamp: Date.now(),
-    };
-
-    set((state) => ({
-      chats: state.chats.map((c) =>
-        c.id === chatId
-          ? { ...c, messages: [...c.messages, tempAssistantMsg] }
-          : c
-      ),
-      messagesList:
-        state.selectedChatId === chatId
-          ? [...state.messagesList, tempAssistantMsg]
-          : state.messagesList,
-    }));
-
-    setThinking(true);
+    // 9) Antes de leer stream: reemplazar placeholder por un mensaje real vacío
+    const assistantMsgId =
+      crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
 
     set((state) => {
-      // Actualizar el chat con el nuevo mensaje
-      const updatedChats = state.chats.map((c) =>
-        c.id === chatId ? { ...c, messages: [...c.messages, newMsg] } : c
-      );
+      const updatedChats = state.chats.map((c) => {
+        if (c.id !== chatId) return c;
+        const hasPlaceholder = c.messages.some((m) => m.id === "assistant-thinking");
+        const messages = hasPlaceholder
+          ? c.messages.map((m) =>
+              m.id === "assistant-thinking"
+                ? { ...m, id: assistantMsgId, text: "", timestamp: Date.now() }
+                : m
+            )
+          : [...c.messages, { id: assistantMsgId, chatId, role: "assistant", text: "", timestamp: Date.now() }];
+        return { ...c, messages };
+      });
 
-      // ✅ Persistir en Local Storage
       saveChatsToLS(updatedChats);
 
-      // Reflejar en la lista visible si es el chat seleccionado
       const isSelected = state.selectedChatId === chatId;
       const updatedMessagesList = isSelected
-        ? [...state.messagesList, newMsg]
+        ? (state.messagesList.some((m) => m.id === "assistant-thinking")
+            ? state.messagesList.map((m) =>
+                m.id === "assistant-thinking"
+                  ? { ...m, id: assistantMsgId, text: "", timestamp: Date.now() }
+                  : m
+              )
+            : [...state.messagesList, { id: assistantMsgId, chatId, role: "assistant", text: "", timestamp: Date.now() }])
         : state.messagesList;
 
       return {
@@ -172,10 +266,118 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       };
     });
 
-    setTimeout(() => {
-      setThinking(false);
+    // 10) Leer stream y actualizar texto acumulativamente
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+    let acc = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      // SSE: parsear líneas "data: {...}" y CRLF
+      const lines = buffer.split(/\r?\n/);
+      buffer = lines.pop() ?? "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+
+        const jsonStr = trimmed.slice("data:".length).trim();
+        if (!jsonStr) continue;
+
+        let evt: any;
+        try {
+          evt = JSON.parse(jsonStr);
+        } catch {
+          continue; // keep-alive u otros no JSON
+        }
+
+        if (evt.done) {
+          // fin del stream enviado por el backend
+          buffer = ""; // limpiar cualquier residuo
+          break;
+        }
+        if (evt.error) {
+          throw new Error(evt.message ?? "stream_failed");
+        }
+
+        const delta: string = evt.delta ?? "";
+        if (delta) {
+          acc += delta;
+
+          // Actualizar el texto del mensaje del asistente y persistir
+          set((state) => {
+            const updatedChats = state.chats.map((c) => {
+              if (c.id !== chatId) return c;
+              const msgs = c.messages.map((m) =>
+                m.id === assistantMsgId ? { ...m, text: acc } : m
+              );
+              return { ...c, messages: msgs };
+            });
+
+            saveChatsToLS(updatedChats);
+
+            const isSelected = state.selectedChatId === chatId;
+            const updatedMessagesList = isSelected
+              ? state.messagesList.map((m) =>
+                  m.id === assistantMsgId ? { ...m, text: acc } : m
+                )
+              : state.messagesList;
+
+            return {
+              chats: updatedChats,
+              messagesList: updatedMessagesList,
+              noMessages: updatedMessagesList.length === 0,
+            };
+          });
+        }
+      }
     }
-  },
+  } catch (err) {
+    // 11) Error: quitar placeholder y agregar mensaje de error del asistente
+    const errorMsg: Message = {
+      id: crypto.randomUUID?.() ?? Math.random().toString(36).slice(2),
+      chatId,
+      role: "assistant",
+      text:
+        "Hubo un problema al obtener la respuesta del agente. " +
+        (err instanceof Error ? err.message : "Error desconocido."),
+      timestamp: Date.now(),
+    };
+
+    set((state) => {
+      const updatedChats = state.chats.map((c) => {
+        if (c.id !== chatId) return c;
+        const filtered = c.messages.filter((m) => m.id !== "assistant-thinking");
+        return { ...c, messages: [...filtered, errorMsg] };
+      });
+
+      saveChatsToLS(updatedChats);
+
+      const isSelected = state.selectedChatId === chatId;
+      const updatedMessagesList = isSelected
+        ? [
+            ...state.messagesList.filter((m) => m.id !== "assistant-thinking"),
+            errorMsg,
+          ]
+        : state.messagesList;
+
+      return {
+        chats: updatedChats,
+        messagesList: updatedMessagesList,
+        noMessages: updatedMessagesList.length === 0,
+      };
+    });
+  } finally {
+    // 12) Apagar "pensando" siempre
+    setThinking(false);
+  }
+},
+
 
   getSelectedChat: () => {
     const { chats, selectedChatId } = get();
@@ -184,24 +386,26 @@ export const useChatStore = create<ChatState>()((set, get) => ({
 
   deleteChat: (chatId) =>
     set((state) => {
-      const chats = state.chats.filter((c) => c.id !== chatId);
-      const selectedChatId =
-        state.selectedChatId === chatId ? chats[0]?.id ?? null : state.selectedChatId;
+      const updatedChats = state.chats.filter((c) => c.id !== chatId);
+
+      const newSelectedId =
+        state.selectedChatId === chatId
+          ? updatedChats[0]?.id ?? null
+          : state.selectedChatId;
 
       const newMessages =
         newSelectedId
           ? updatedChats.find((c) => c.id === newSelectedId)?.messages ?? []
           : [];
 
-      // ✅ Persistir cambios
       saveChatsToLS(updatedChats);
       saveSelectedIdToLS(newSelectedId);
 
       return {
-        chats,
-        selectedChatId,
-        messagesList: messages,
-        noMessages: messages.length === 0,
+        chats: updatedChats,
+        selectedChatId: newSelectedId,
+        messagesList: newMessages,
+        noMessages: newMessages.length === 0,
       };
     }),
 
@@ -211,7 +415,6 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         c.id === chatId ? { ...c, title: newTitle } : c
       );
 
-      // ✅ Persistir cambios
       saveChatsToLS(updatedChats);
 
       return { chats: updatedChats };
