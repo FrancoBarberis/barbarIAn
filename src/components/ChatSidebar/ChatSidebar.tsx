@@ -6,6 +6,7 @@ import { useUIStore } from "../../store/uiStore";
 import clsx from "clsx";
 import deleteIcon from "../../assets/trash-bin.png";
 import editIcon from "../../assets/pencil.png";
+import { motion } from "framer-motion";
 
 const ChatSidebar: React.FC = () => {
   const collapsed = useUIStore((s) => s.collapsed);
@@ -33,14 +34,17 @@ const ChatSidebar: React.FC = () => {
         </div>
       ) : (
         // Vista expandida
-        <>
+        <motion.div
+          initial={{ opacity: 0, x: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 0 }}
+          transition={{ duration: 1, ease: "easeIn" }}>
           <button
             className={styles.newChat}
             onClick={() => createChat("Nuevo chat")}
           >
             +
           </button>
-
           <div
             className={clsx(
               styles.chatList,
@@ -50,7 +54,11 @@ const ChatSidebar: React.FC = () => {
             {chats.map((chat) => {
               const isActive = chat.id === selectedChatId;
               return (
-                <div
+                <motion.div
+                  initial={{ opacity: 0, x: -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
                   key={chat.id}
                   role="button"
                   tabIndex={0}
@@ -88,7 +96,7 @@ const ChatSidebar: React.FC = () => {
                       <img src={deleteIcon} alt="trash-bin" className={styles.button__icon} />
                     </button>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
 
@@ -99,7 +107,7 @@ const ChatSidebar: React.FC = () => {
             )}
           </div>
           {/* <UserProfile /> */}
-        </>
+        </motion.div>
       )}
     </aside>
   );

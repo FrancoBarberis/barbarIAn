@@ -19,7 +19,7 @@ const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
     hour12: false,
   });
 
-  return text === "" ? (
+  return text === "..." ? (
     <motion.div
       initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
@@ -65,6 +65,7 @@ const Message: React.FC<MessageProps> = ({ text, role, timestamp }) => {
           alignSelf: role === "assistant" ? "flex-end" : "flex-start",
           fontSize: "0.75em",
           opacity: 0.7,
+          color: "white",
         }}
       >
         {formattedTime}
