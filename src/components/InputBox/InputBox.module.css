@@ -2,7 +2,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    min-height: 13vh;
+    min-height: 10vh;
     background-color: var(--secondary-color);
     display: flex;
     justify-content: center;
@@ -26,8 +26,7 @@
     width: 40%;
     bottom: 50%;
     transform: translateY(50%);
-    border-radius: 20px;
-    background-color: var(--secondary-color);
+    border-radius: 5px;
 }
 
 .suggestions {

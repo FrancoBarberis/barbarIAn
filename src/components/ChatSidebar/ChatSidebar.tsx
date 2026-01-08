@@ -38,7 +38,7 @@ const ChatSidebar: React.FC = () => {
           initial={{ opacity: 0, x: 0 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 0 }}
-          transition={{ duration: 1, ease: "easeIn" }}>
+          transition={{ duration: .7, ease: "easeIn" }}>
           <button
             className={styles.newChat}
             onClick={() => createChat("Nuevo chat")}
@@ -101,9 +101,17 @@ const ChatSidebar: React.FC = () => {
             })}
 
             {chats.length === 0 && (
-              <p className={clsx([styles.message], collapsed && styles.hidden)}>
-                No hay chats. Creá uno para empezar.
-              </p>
+              <motion.p
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.1 }}
+              style={{ fontSize: "0.875rem" }}
+              className={clsx([styles.message], collapsed && styles.hidden)}>
+                No hay chats. 
+                <br />
+                Creá uno para empezar.
+              </motion.p>
             )}
           </div>
           {/* <UserProfile /> */}

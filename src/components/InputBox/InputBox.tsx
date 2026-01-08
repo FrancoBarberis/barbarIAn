@@ -8,6 +8,7 @@ import clsx from "clsx";
 import Input from "@mui/joy/Input";
 import Button from "@mui/joy/Button";
 import Box from "@mui/joy/Box";
+import TypedSuggestions from "./TypedSuggestions";
 
 const InputBox: React.FC = () => {
   const thinking = useUIStore((s) => s.thinking);
@@ -16,7 +17,7 @@ const InputBox: React.FC = () => {
   const selectedChatId = useChatStore((s) => s.selectedChatId);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const suggestions: string[] = ["¿En qué piensas?", "¿Cómo estás?", "Cuéntame un chiste"]; 
+  
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -29,9 +30,9 @@ const InputBox: React.FC = () => {
 
   return (
     <div className={clsx(styles.container, noMessages && styles.no__messages)}>
-      <h2 className={clsx(styles.suggestions, !noMessages && styles.hidden)}>Sugerencias</h2>
+      <h2 className={clsx(styles.suggestions, !noMessages && styles.hidden)}>{<TypedSuggestions/>}</h2>
       <form
-      className={clsx(styles.inputBox,)}
+      className={clsx(styles.inputBox)}
       onSubmit={(e) => {
         e.preventDefault();
         submit();
